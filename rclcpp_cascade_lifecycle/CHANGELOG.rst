@@ -2,8 +2,8 @@
 Changelog for package rclcpp_cascade_lifecycle
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.3 (2024-04-04)
+------------------
 * Fix clear activations
 * Contributors: Francisco Martín Rico
 
