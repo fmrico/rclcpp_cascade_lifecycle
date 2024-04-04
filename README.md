@@ -1,14 +1,15 @@
 # cascade_lifecycle
 
-[![master](https://github.com/fmrico/cascade_lifecycle/actions/workflows/master.yaml/badge.svg)](https://github.com/fmrico/cascade_lifecycle/actions/workflows/master.yaml)
+[![rolling](https://github.com/fmrico/cascade_lifecycle/actions/workflows/rolling.yaml/badge.svg)](https://github.com/fmrico/cascade_lifecycle/actions/workflows/rolling.yaml)
 [![foxy-devel](https://github.com/fmrico/cascade_lifecycle/actions/workflows/foxy-devel.yaml/badge.svg)](https://github.com/fmrico/cascade_lifecycle/actions/workflows/foxy-devel.yaml)
 [![galactic-devel](https://github.com/fmrico/cascade_lifecycle/actions/workflows/galactic-devel.yaml/badge.svg)](https://github.com/fmrico/cascade_lifecycle/actions/workflows/galactic-devel.yaml)
 [![humble-devel](https://github.com/fmrico/cascade_lifecycle/actions/workflows/humble-devel.yaml/badge.svg)](https://github.com/fmrico/cascade_lifecycle/actions/workflows/humble-devel.yaml)
+[![iron-devel](https://github.com/fmrico/cascade_lifecycle/actions/workflows/iron-devel.yaml/badge.svg)](https://github.com/fmrico/cascade_lifecycle/actions/workflows/iron-devel.yaml)
 [![rolling-devel](https://github.com/fmrico/cascade_lifecycle/actions/workflows/rolling-devel.yaml/badge.svg)](https://github.com/fmrico/cascade_lifecycle/actions/workflows/rolling-devel.yaml)
 
 [Managed nodes](https://design.ros2.org/articles/node_lifecycle.html) (or lifecycle nodes, LN) are an extremely useful concept in ROS2. It provides a mechanism to define states in a node so that its life cycle can be better controlled.
 
-When an application is made up of multiple LNs, it is common to use a node to orchestrate the transitions of each one. This occurs, for example, in [Navigation2](https://github.com/ros-planning/navigation2/tree/master/nav2_lifecycle_manager) or in [ROS2 Planning System](https://github.com/IntelligentRoboticsLabs/ros2_planning_system/tree/master/plansys2_lifecycle_manager).
+When an application is made up of multiple LNs, it is common to use a node to orchestrate the transitions of each one. This occurs, for example, in [Navigation2](https://github.com/ros-planning/navigation2/tree/master/nav2_lifecycle_manager) or in [ROS2 Planning System](https://github.com/IntelligentRoboticsLabs/ros2_planning_system/tree/rolling/plansys2_lifecycle).
 
 `cascade_lifecycle` provides a mechanism that can make managing LNs easier. This idea is based on my developments with [BICA](https://github.com/IntelligentRoboticsLabs/BICA/tree/ros2). This mechanism allows defining dependencies between LNs. When an LN A establishes an LN B as a dependency, when an A enters a state, B automatically enters this state. This allows creating configuration/activation/deactivation trees.
 

@@ -1,15 +1,12 @@
-name: master
+name: humble-devel
 
 on:
   pull_request:
     branches:
-      - master
+      - humble-devel
   push:
     branches:
-      - master
-  workflow_dispatch:
-    schedule:
-      - cron: '0 0 * * 0'
+      - humble-devel
       
 jobs:
   build-and-test:
@@ -20,19 +17,19 @@ jobs:
       fail-fast: false
     steps:
       - name: Setup ROS 2
-        uses: ros-tooling/setup-ros@0.4.1
+        uses: ros-tooling/setup-ros@0.3.3
         with:
-          required-ros-distributions: rolling
+          required-ros-distributions: humble
       - name: build and test
-        uses: ros-tooling/action-ros-ci@0.2.7
+        uses: ros-tooling/action-ros-ci@0.2.5
         with:
           package-name: rclcpp_cascade_lifecycle cascade_lifecycle_msgs
-          target-ros2-distro: rolling
+          target-ros2-distro: humble
           vcs-repo-file-url: ""
           colcon-mixin-name: coverage-gcc
           colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
       - name: Codecov
-        uses: codecov/codecov-action@v3.1.1
+        uses: codecov/codecov-action@v1.2.1
         with:
           file: ros_ws/lcov/total_coverage.info
           flags: unittests

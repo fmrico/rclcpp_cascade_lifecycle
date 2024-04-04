@@ -1,12 +1,12 @@
-name: rolling-devel
+name: rolling
 
 on:
   pull_request:
     branches:
-      - rolling-devel
+      - rolling
   push:
     branches:
-      - rolling-devel
+      - rolling
   workflow_dispatch:
     schedule:
       - cron: '0 0 * * 0'
@@ -22,7 +22,7 @@ jobs:
       - name: Setup ROS 2
         uses: ros-tooling/setup-ros@0.7.1
         with:
-          required-ros-distributions: humble
+          required-ros-distributions: rolling
       - name: build and test
         uses: ros-tooling/action-ros-ci@0.3.6
         with:
@@ -30,7 +30,7 @@ jobs:
           target-ros2-distro: rolling
           vcs-repo-file-url: ""
           colcon-mixin-name: coverage-gcc
-          colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/rolling-devel/index.yaml
+          colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
       - name: Codecov
         uses: codecov/codecov-action@v3.1.1
         with:
