@@ -22,7 +22,7 @@ jobs:
       - name: Setup ROS 2
         uses: ros-tooling/setup-ros@0.7.1
         with:
-          required-ros-distributions: humble
+          required-ros-distributions: rolling
       - name: build and test
         uses: ros-tooling/action-ros-ci@0.3.6
         with:
