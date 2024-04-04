@@ -2,6 +2,9 @@
 Changelog for package cascade_lifecycle_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.2 (2022-12-31)
 ------------------
 
