@@ -2,6 +2,11 @@
 Changelog for package rclcpp_cascade_lifecycle
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix clear_activation
+* Contributors: Francisco Martín Rico
+
 1.0.2 (2022-12-31)
 ------------------
 * Fix new deactivation publishers policy
