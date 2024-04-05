@@ -13,18 +13,19 @@
 # limitations under the License.
 
 
-import rclpy
-import lifecycle_msgs.msg
 import cascade_lifecycle_msgs.msg
-from rclpy.lifecycle import LifecycleNode
-from rclpy.lifecycle import State
-from rclpy.lifecycle import TransitionCallbackReturn
-from rclpy.qos import QoSProfile
-from rclpy.qos import QoSReliabilityPolicy, QoSDurabilityPolicy, QoSHistoryPolicy
+import lifecycle_msgs.msg
+
+from rclpy.lifecycle import LifecycleNode, State, \
+    TransitionCallbackReturn
+from rclpy.qos import QoSDurabilityPolicy, QoSHistoryPolicy, \
+    QoSProfile, QoSReliabilityPolicy
+
 
 class CascadeLifecycleNode(LifecycleNode):
-    def __init__(self, node_name="CascadeLifecycleNode"):
-        super().__init__(node_name)
+
+    def __init__(self, node_name='CascadeLifecycleNode', ns=''):
+        super().__init__(node_name, namespace=ns)
 
         qos_profile = QoSProfile(
             history=QoSHistoryPolicy.KEEP_LAST,
@@ -33,15 +34,39 @@ class CascadeLifecycleNode(LifecycleNode):
             durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)
 
         self._node_name = node_name
-        self._activators_pub = self.create_publisher(cascade_lifecycle_msgs.msg.Activation, "cascade_lifecycle_activations", qos_profile)
-        self._states_pub = self.create_publisher(cascade_lifecycle_msgs.msg.State, "cascade_lifecycle_states", 100)
-        self._activations_sub = self.create_subscription(cascade_lifecycle_msgs.msg.Activation, "cascade_lifecycle_activations", self.activations_callback, qos_profile)
-        self._states_sub = self.create_subscription(cascade_lifecycle_msgs.msg.State, "cascade_lifecycle_states", self.states_callback, 100)
+        self._namespace = ns
+        self._activators_pub = self.create_publisher(
+            cascade_lifecycle_msgs.msg.Activation,
+            'cascade_lifecycle_activations',
+            qos_profile)
+        self._states_pub = self.create_publisher(
+            cascade_lifecycle_msgs.msg.State,
+            'cascade_lifecycle_states',
+            100)
+        self._activations_sub = self.create_subscription(
+            cascade_lifecycle_msgs.msg.Activation,
+            'cascade_lifecycle_activations',
+            self.activations_callback,
+            qos_profile)
+        self._states_sub = self.create_subscription(
+            cascade_lifecycle_msgs.msg.State,
+            'cascade_lifecycle_states',
+            self.states_callback,
+            100)
         self._timer = self.create_timer(0.5, self.timer_callback)
 
         self._activators = []
         self._activations = []
         self._activators_state = {}
+
+    def get_activators(self):
+        return self._activators
+
+    def get_activations(self):
+        return self._activations
+
+    def get_activators_state(self):
+        return self._activators_state
 
     def activations_callback(self, msg):
         if (msg.operation_type == cascade_lifecycle_msgs.msg.Activation.ADD):
@@ -49,25 +74,32 @@ class CascadeLifecycleNode(LifecycleNode):
                 self._activators.append(msg.activator)
 
                 if (msg.activator not in self._activators_state):
-                    self._activators_state[msg.activator] = lifecycle_msgs.msg.State.PRIMARY_STATE_UNKNOWN
-        elif (msg.operation_type == cascade_lifecycle_msgs.msg.Activation.REMOVE):
-            if (msg.activation == self._node_name and msg.activator not in self._activators):
+                    self._activators_state[msg.activator] = \
+                        lifecycle_msgs.msg.State.PRIMARY_STATE_UNKNOWN
+        elif (msg.operation_type ==
+              cascade_lifecycle_msgs.msg.Activation.REMOVE):
+            if (msg.activation == self._node_name and
+                    msg.activator in self._activators):
                 remover_state = self._activators_state[msg.activator]
                 self._activators.remove(msg.activator)
 
                 if (msg.activator in self._activators_state):
                     self._activators_state.pop(msg.activator)
 
-                if (remover_state == lifecycle_msgs.msg.State.PRIMARY_STATE_ACTIVE):
+                if (remover_state ==
+                        lifecycle_msgs.msg.State.PRIMARY_STATE_ACTIVE):
                     any_other_active = False
                     for activator in self._activators_state:
-                        any_other_active = any_other_active or self._activators_state[activator] == lifecycle_msgs.msg.State.PRIMARY_STATE_ACTIVE
+                        any_other_active = any_other_active or \
+                            self._activators_state[activator] == \
+                            lifecycle_msgs.msg.State.PRIMARY_STATE_ACTIVE
 
                     if (not any_other_active):
                         self.trigger_deactivate()
 
     def states_callback(self, msg):
-        if (msg.node_name in self._activators_state and msg.node_name != self._node_name):
+        if (msg.node_name in self._activators_state and
+                msg.node_name != self._node_name):
             if (self._activators_state[msg.node_name] != msg.state):
                 self._activators_state[msg.node_name] = msg.state
                 self.update_state()
@@ -78,7 +110,7 @@ class CascadeLifecycleNode(LifecycleNode):
             msg.operation_type = cascade_lifecycle_msgs.msg.Activation.ADD
             msg.activation = node_name
             msg.activator = self._node_name
-            
+
             self._activations.append(node_name)
             self._activators_pub.publish(msg)
 
@@ -88,8 +120,8 @@ class CascadeLifecycleNode(LifecycleNode):
             msg.operation_type = cascade_lifecycle_msgs.msg.Activation.REMOVE
             msg.activation = node_name
             msg.activator = self._node_name
-            
-            self._activations.append(node_name)
+
+            self._activations.remove(node_name)
             self._activators_pub.publish(msg)
 
     def clear_activation(self):
@@ -155,58 +187,59 @@ class CascadeLifecycleNode(LifecycleNode):
         parent_active = False
 
         for activator in self._activators_state:
-            parent_inactive = parent_inactive or self._activators_state[activator] == lifecycle_msgs.msg.State.PRIMARY_STATE_INACTIVE
-            parent_active = parent_active or self._activators_state[activator] == lifecycle_msgs.msg.State.PRIMARY_STATE_ACTIVE
+            parent_inactive = parent_inactive or \
+                self._activators_state[activator] == \
+                lifecycle_msgs.msg.State.PRIMARY_STATE_INACTIVE
+            parent_active = parent_active or \
+                self._activators_state[activator] == \
+                lifecycle_msgs.msg.State.PRIMARY_STATE_ACTIVE
 
         current_state = self._state_machine.current_state[1]
-        
-        if (current_state == "unknown"):
+
+        if (current_state == 'unknown'):
             if (parent_active or parent_inactive):
                 self.trigger_configure()
-        elif (current_state == "unconfigured"):
+        elif (current_state == 'unconfigured'):
             if (parent_active or parent_inactive):
                 self.trigger_configure()
-        elif (current_state == "inactive"):
+        elif (current_state == 'inactive'):
             if (parent_active):
                 self.trigger_activate()
-        elif (current_state == "active"):
+        elif (current_state == 'active'):
             if (not parent_active and parent_inactive):
                 self.trigger_deactivate()
 
     def timer_callback(self):
         nodes = self.get_node_names()
-        ns = self.get_namespace()
+        ns = self._namespace
         current_state = self._state_machine.current_state[1]
+        activators_to_remove = []
 
-        if (ns != "/"):
-            ns = ns + "/"
+        if (ns != '/'):
+            ns = ns + '/'
 
-        it = iter(self._activators)
-        while True:
-            try:
-                node_name = next(it)
-                if ns + node_name in nodes:
-                    self._activators.remove(node_name)
+        for node_name in self._activators:
+            if node_name not in nodes:
+                activators_to_remove.append(node_name)
 
-                    if current_state == self._activators_state[node_name]:
-                        self.update_state()
+                if current_state == self._activators_state[node_name]:
+                    self.update_state()
 
-                    del self._activators_state[node_name]
-                else:
-                    it.__next__()
-            except StopIteration:
-                break
+                self._activators_state.pop(node_name)
+
+        for node_name in activators_to_remove:
+            self._activators.remove(node_name)
 
         msg = cascade_lifecycle_msgs.msg.State()
         msg.node_name = self._node_name
-        
-        if (current_state == "unknown"):
+
+        if (current_state == 'unknown'):
             msg.state = lifecycle_msgs.msg.State.PRIMARY_STATE_UNKNOWN
-        elif (current_state == "unconfigured"):
+        elif (current_state == 'unconfigured'):
             msg.state = lifecycle_msgs.msg.State.PRIMARY_STATE_UNCONFIGURED
-        elif (current_state == "inactive"):
+        elif (current_state == 'inactive'):
             msg.state = lifecycle_msgs.msg.State.PRIMARY_STATE_INACTIVE
-        elif (current_state == "active"):
+        elif (current_state == 'active'):
             msg.state = lifecycle_msgs.msg.State.PRIMARY_STATE_ACTIVE
 
         self._states_pub.publish(msg)
