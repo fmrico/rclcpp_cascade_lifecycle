@@ -202,8 +202,8 @@ CascadeLifecycleNode::remove_activation(const std::string & node_name)
 void
 CascadeLifecycleNode::clear_activation()
 {
-  for (const auto & activation : activations_) {
-    remove_activation(activation);
+  while (!activations_.empty()) {
+    remove_activation(*activations_.begin());
   }
 }
 
