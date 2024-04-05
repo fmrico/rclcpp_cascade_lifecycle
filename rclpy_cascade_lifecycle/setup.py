@@ -1,5 +1,6 @@
-from setuptools import setup
 import os
+
+from setuptools import setup
 
 package_name = 'rclpy_cascade_lifecycle'
 
@@ -11,7 +12,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (os.path.join('share', package_name, 'resource'), ['resource/rclpy_cascade_lifecycle']),
+        (os.path.join('share', package_name, 'resource'),
+            ['resource/rclpy_cascade_lifecycle']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -19,10 +21,12 @@ setup(
     maintainer_email='jc.manzanares.serrano@gmail.com',
     description='rclpy cascade lifecycle',
     license='Apache License, Version 2.0',
-    tests_require=[''],
+    tests_require=['pytest'],
     entry_points={
         'ros2cli.command_plugins': [
-            'cascade_lifecycle = rclpy_cascade_lifecycle.cascade_lifecycle_node:CascadeLifecycleNode',
+            'cascade_lifecycle = \
+                rclpy_cascade_lifecycle.cascade_lifecycle_node:\
+                CascadeLifecycleNode',
         ],
     },
 )
