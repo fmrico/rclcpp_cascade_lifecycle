@@ -101,16 +101,21 @@ private:
   rclcpp::Subscription<cascade_lifecycle_msgs::msg::State>::SharedPtr states_sub_;
 
   rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::TimerBase::SharedPtr timer_responses_;
 
   std::set<std::string> activators_;
   std::set<std::string> activations_;
   std::map<std::string, uint8_t> activators_state_;
+  std::list<cascade_lifecycle_msgs::msg::Activation> op_pending_;
 
   void activations_callback(const cascade_lifecycle_msgs::msg::Activation::SharedPtr msg);
   void states_callback(const cascade_lifecycle_msgs::msg::State::SharedPtr msg);
   void update_state();
 
   void timer_callback();
+  void timer_responses_callback();
+
+  bool allow_duplicate_names_ {true};
 };
 
 }  // namespace rclcpp_cascade_lifecycle
