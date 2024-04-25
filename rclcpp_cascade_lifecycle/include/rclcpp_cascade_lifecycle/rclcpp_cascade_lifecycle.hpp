@@ -40,6 +40,7 @@ namespace rclcpp_cascade_lifecycle
 class CascadeLifecycleNode : public rclcpp_lifecycle::LifecycleNode
 {
 public:
+  RCLCPP_SMART_PTR_DEFINITIONS(CascadeLifecycleNode)
   /// Create a new lifecycle node with the specified name.
   /**
    * \param[in] node_name Name of the node.
