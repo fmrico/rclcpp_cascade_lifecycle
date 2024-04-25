@@ -78,7 +78,7 @@ CascadeLifecycleNode::CascadeLifecycleNode(
   timer_ = create_wall_timer(
     500ms,
     std::bind(&CascadeLifecycleNode::timer_callback, this));
-  
+
   if (!allow_duplicate_names_) {
     timer_responses_ = create_wall_timer(
       1s,
@@ -131,7 +131,7 @@ CascadeLifecycleNode::activations_callback(
         if (activators_state_.find(msg->activator) == activators_state_.end()) {
           activators_state_[msg->activator] = lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
         }
-        
+
         if (!allow_duplicate_names_) {
           auto response = *msg;
           response.operation_type = cascade_lifecycle_msgs::msg::Activation::CONFIRM_ADD;

@@ -18,6 +18,7 @@
 #include <set>
 #include <map>
 #include <string>
+#include <list>
 
 #include "rclcpp/node_options.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
