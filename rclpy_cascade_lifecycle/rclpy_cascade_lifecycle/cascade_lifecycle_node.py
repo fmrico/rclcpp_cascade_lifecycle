@@ -24,7 +24,7 @@ from rclpy.qos import QoSDurabilityPolicy, QoSHistoryPolicy, \
 
 class CascadeLifecycleNode(LifecycleNode):
 
-    def __init__(self, node_name='CascadeLifecycleNode', ns=''):
+    def __init__(self, node_name='CascadeLifecycleNode', ns='', options=None):
         super().__init__(node_name, namespace=ns)
 
         qos_profile = QoSProfile(
@@ -32,28 +32,51 @@ class CascadeLifecycleNode(LifecycleNode):
             depth=1000,
             reliability=QoSReliabilityPolicy.RELIABLE,
             durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)
+        
+        self._allow_duplicate_names = True
+
+        self.declare_parameter('allow_duplicate_names', True)
+        self._allow_duplicate_names = self.get_parameter('allow_duplicate_names').get_parameter_value().bool_value
 
         self._node_name = node_name
         self._namespace = ns
-        self._activators_pub = self.create_publisher(
-            cascade_lifecycle_msgs.msg.Activation,
-            'cascade_lifecycle_activations',
-            qos_profile)
+
+        if (not self._allow_duplicate_names):
+            self._activations_pub = self.create_publisher(
+                cascade_lifecycle_msgs.msg.Activation,
+                'cascade_lifecycle_activations')
+            
+            self._activations_sub = self.create_subscription(
+                cascade_lifecycle_msgs.msg.Activation,
+                'cascade_lifecycle_activations',
+                self.activations_callback)
+        else: 
+            self._activations_pub = self.create_publisher(
+                cascade_lifecycle_msgs.msg.Activation,
+                'cascade_lifecycle_activations',
+                qos_profile)
+
+            self._activations_sub = self.create_subscription(
+                cascade_lifecycle_msgs.msg.Activation,
+                'cascade_lifecycle_activations',
+                self.activations_callback,
+                qos_profile)
+
         self._states_pub = self.create_publisher(
             cascade_lifecycle_msgs.msg.State,
             'cascade_lifecycle_states',
             100)
-        self._activations_sub = self.create_subscription(
-            cascade_lifecycle_msgs.msg.Activation,
-            'cascade_lifecycle_activations',
-            self.activations_callback,
-            qos_profile)
+
         self._states_sub = self.create_subscription(
             cascade_lifecycle_msgs.msg.State,
             'cascade_lifecycle_states',
             self.states_callback,
             100)
+
         self._timer = self.create_timer(0.5, self.timer_callback)
+
+        if (not self._allow_duplicate_names):
+            self._timer_responses = self.create_timer(1, self.timer_responses_callback)
 
         self._activators = []
         self._activations = []
@@ -76,6 +99,11 @@ class CascadeLifecycleNode(LifecycleNode):
                 if (msg.activator not in self._activators_state):
                     self._activators_state[msg.activator] = \
                         lifecycle_msgs.msg.State.PRIMARY_STATE_UNKNOWN
+                    
+                if (not self._allow_duplicate_names):
+                    response = msg
+                    response.operation_type = cascade_lifecycle_msgs.msg.Activation.CONFIRM_ADD
+                    self._activations_pub.publish(response)
         elif (msg.operation_type ==
               cascade_lifecycle_msgs.msg.Activation.REMOVE):
             if (msg.activation == self._node_name and
@@ -97,6 +125,27 @@ class CascadeLifecycleNode(LifecycleNode):
                     if (not any_other_active):
                         self.trigger_deactivate()
 
+                if (not self._allow_duplicate_names):
+                    response = msg
+                    response.operation_type = cascade_lifecycle_msgs.msg.Activation.CONFIRM_REMOVE
+                    self._activations_pub.publish(response)
+        elif (msg.operation_type ==
+              cascade_lifecycle_msgs.msg.Activation.CONFIRM_ADD):
+            for op in self.__op_pending:
+                if (op['operation_type'] ==
+                        cascade_lifecycle_msgs.msg.Activation.ADD and
+                        op['activation'] == msg.activator and
+                        op['activator'] == msg.activation):
+                    self._op_pending.remove(op)
+        elif (msg.operation_type ==
+              cascade_lifecycle_msgs.msg.Activation.CONFIRM_REMOVE):
+            for op in self._op_pending:
+                if (op['operation_type'] ==
+                        cascade_lifecycle_msgs.msg.Activation.REMOVE and
+                        op['activation'] == msg.activator and
+                        op['activator'] == msg.activation):
+                    self.__op_pending.remove(op)
+
     def states_callback(self, msg):
         if (msg.node_name in self._activators_state and
                 msg.node_name != self._node_name):
@@ -112,7 +161,12 @@ class CascadeLifecycleNode(LifecycleNode):
             msg.activator = self._node_name
 
             self._activations.append(node_name)
-            self._activators_pub.publish(msg)
+
+            if (not self._allow_duplicate_names):
+                self._op_pending.append(msg)
+
+            self._activations_pub.publish(msg)
+
 
     def remove_activation(self, node_name):
         if (node_name != self._node_name):
@@ -122,7 +176,11 @@ class CascadeLifecycleNode(LifecycleNode):
             msg.activator = self._node_name
 
             self._activations.remove(node_name)
-            self._activators_pub.publish(msg)
+
+            if (not self._allow_duplicate_names):
+                self._op_pending.append(msg)
+
+            self._activations_pub.publish(msg)
 
     def clear_activation(self):
         for activator in self._activators:
@@ -245,3 +303,7 @@ class CascadeLifecycleNode(LifecycleNode):
         self._states_pub.publish(msg)
 
         self.update_state()
+
+    def timer_responses_callback(self):
+        for msg in self._op_pending:
+            self._activations_pub.publish(msg)
