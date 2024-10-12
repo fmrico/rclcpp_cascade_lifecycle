@@ -5,6 +5,7 @@
 [![galactic-devel](https://github.com/fmrico/cascade_lifecycle/actions/workflows/galactic-devel.yaml/badge.svg)](https://github.com/fmrico/cascade_lifecycle/actions/workflows/galactic-devel.yaml)
 [![humble-devel](https://github.com/fmrico/cascade_lifecycle/actions/workflows/humble-devel.yaml/badge.svg)](https://github.com/fmrico/cascade_lifecycle/actions/workflows/humble-devel.yaml)
 [![iron-devel](https://github.com/fmrico/cascade_lifecycle/actions/workflows/iron-devel.yaml/badge.svg)](https://github.com/fmrico/cascade_lifecycle/actions/workflows/iron-devel.yaml)
+[![jazzy-devel](https://github.com/fmrico/cascade_lifecycle/actions/workflows/jazzy-devel.yaml/badge.svg)](https://github.com/fmrico/cascade_lifecycle/actions/workflows/jazzy-devel.yaml)
 [![rolling-devel](https://github.com/fmrico/cascade_lifecycle/actions/workflows/rolling-devel.yaml/badge.svg)](https://github.com/fmrico/cascade_lifecycle/actions/workflows/rolling-devel.yaml)
 
 [Managed nodes](https://design.ros2.org/articles/node_lifecycle.html) (or lifecycle nodes, LN) are an extremely useful concept in ROS2. It provides a mechanism to define states in a node so that its life cycle can be better controlled.
