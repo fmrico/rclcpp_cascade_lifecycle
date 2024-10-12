@@ -2,6 +2,12 @@
 Changelog for package rclcpp_cascade_lifecycle
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Explicit removal of node from executor before destroy
+* Allow to have pubs/sub with standard QoS
+* Contributors: Francisco Martín Rico, Juan Carlos Manzanares Serrano
+
 2.0.0 (2024-04-04)
 ------------------
 * Fix clear_activation

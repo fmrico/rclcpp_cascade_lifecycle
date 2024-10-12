@@ -2,6 +2,20 @@
 Changelog for package cascade_lifecycle_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#11 <https://github.com/fmrico/cascade_lifecycle/issues/11>`_ from fmrico/remove_qos_transient
+  Remove qos transient
+* Allow to have pubs/sub with standard QoS
+* Merge branch 'rolling' of https://github.com/Juancams/cascade_lifecycle into rolling
+* Merge branch 'fmrico:rolling' into rolling
+* Merge branch 'rolling-devel' into rolling
+* Fix CI fail
+* Resolve conflicts
+* 1.0.3
+* Update changelog
+* Contributors: Francisco Martín Rico, Juan Carlos Manzanares Serrano, Juancams
+
 2.0.0 (2024-04-04)
 ------------------
 
