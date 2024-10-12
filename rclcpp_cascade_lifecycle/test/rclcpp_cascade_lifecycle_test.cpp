@@ -125,6 +125,7 @@ TEST(rclcpp_cascade_lifecycle, activations_managing_late_joining)
   ASSERT_TRUE(node_b->get_activations().empty());
   ASSERT_EQ(node_b->get_activators().size(), 1u);
 
+  executor.remove_node(node_b->get_node_base_interface());
   node_b = nullptr;
 
   {
@@ -524,6 +525,7 @@ TEST(rclcpp_cascade_lifecycle, activators_disappearance)
   ASSERT_EQ(node_a->get_current_state().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
   ASSERT_EQ(node_b->get_current_state().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
 
+  executor.remove_node(node_a->get_node_base_interface());
   node_a = nullptr;
 
   {
@@ -1020,6 +1022,7 @@ TEST(rclcpp_cascade_lifecycle, activations_managing_late_joining_with_namespace)
   ASSERT_TRUE(node_b->get_activations().empty());
   ASSERT_EQ(node_b->get_activators().size(), 1u);
 
+  executor.remove_node(node_b->get_node_base_interface());
   node_b = nullptr;
 
   {
@@ -1441,6 +1444,7 @@ TEST(rclcpp_cascade_lifecycle, activators_disappearance_with_namespace)
   ASSERT_EQ(node_a->get_current_state().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
   ASSERT_EQ(node_b->get_current_state().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
 
+  executor.remove_node(node_a->get_node_base_interface());
   node_a = nullptr;
 
   {
