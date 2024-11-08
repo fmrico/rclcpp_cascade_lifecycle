@@ -28,7 +28,7 @@ Using `rclcpp_cascade_lifecycle` in the next example, `node_b` makes the same st
 auto node_a = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_A");
 auto node_b = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_B");
 
-rclcpp::executors::SingleThreadedExecutor executor;
+rclcpp::experimental::executors::EventsExecutor executor;
 executor.add_node(node_a->get_node_base_interface());
 executor.add_node(node_b->get_node_base_interface());
 
