@@ -1,12 +1,12 @@
-name: jazzy
+name: jazzy-devel
 
 on:
   pull_request:
     branches:
-      - jazzy
+      - jazzy-devel
   push:
     branches:
-      - jazzy
+      - jazzy-devel
   workflow_dispatch:
     schedule:
       - cron: '0 0 * * 0'
@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04]
+        os: [ubuntu-24.04]
       fail-fast: false
     steps:
       - name: Setup ROS 2
@@ -26,8 +26,14 @@ jobs:
       - name: build and test
         uses: ros-tooling/action-ros-ci@0.3.6
         with:
-          package-name: rclcpp_cascade_lifecycle cascade_lifecycle_msgs
+          package-name: rclcpp_cascade_lifecycle rclcpy_cascade_lifecycle cascade_lifecycle_msgs
           target-ros2-distro: jazzy
+          colcon-defaults: |
+            {
+              "test": {
+                "parallel-workers" : 1
+              }
+            }
           vcs-repo-file-url: ""
           colcon-mixin-name: coverage-gcc
           colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
