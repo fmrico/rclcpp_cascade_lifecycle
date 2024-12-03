@@ -19,6 +19,7 @@ jobs:
         os: [ubuntu-24.04]
       fail-fast: false
     steps:
+      - uses: actions/checkout@v2
       - name: Setup ROS 2
         uses: ros-tooling/setup-ros@0.7.9
         with:
