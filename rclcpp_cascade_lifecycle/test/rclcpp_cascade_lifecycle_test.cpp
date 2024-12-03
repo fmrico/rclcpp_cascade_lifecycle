@@ -74,7 +74,7 @@ TEST(rclcpp_cascade_lifecycle, activations_managing_basic)
   auto node_b = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_B");
   auto node_c = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_C");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
   executor.add_node(node_c->get_node_base_interface());
@@ -104,7 +104,7 @@ TEST(rclcpp_cascade_lifecycle, activations_managing_late_joining)
   auto node_a = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_A");
   auto node_b = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_B");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
 
@@ -164,7 +164,7 @@ TEST(rclcpp_cascade_lifecycle, activations_chained)
   auto node_a = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_A");
   auto node_b = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_B");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
 
@@ -265,7 +265,7 @@ TEST(rclcpp_cascade_lifecycle, multiple_activations_chained)
   auto node_b = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_B");
   auto node_c = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_C");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
   executor.add_node(node_c->get_node_base_interface());
@@ -447,7 +447,7 @@ TEST(rclcpp_cascade_lifecycle, fast_change)
   auto node_a = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_A");
   auto node_b = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_B");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
 
@@ -489,7 +489,7 @@ TEST(rclcpp_cascade_lifecycle, activators_disappearance)
   auto node_a = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_A");
   auto node_b = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_B");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
 
@@ -549,7 +549,7 @@ TEST(rclcpp_cascade_lifecycle, activators_disappearance_inter)
   auto node_b = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_B");
   auto node_c = std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>("node_C");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
   executor.add_node(node_c->get_node_base_interface());
@@ -901,7 +901,7 @@ TEST(rclcpp_cascade_lifecycle, inheritance)
   auto node_1 = std::make_shared<TestNode>("node_1");
   auto node_2 = std::make_shared<TestNode>("node_2");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_1->get_node_base_interface());
   executor.add_node(node_2->get_node_base_interface());
 
@@ -967,7 +967,7 @@ TEST(rclcpp_cascade_lifecycle, activations_managing_basic_with_namespace)
     "node_C",
     "test_ns");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
   executor.add_node(node_c->get_node_base_interface());
@@ -1001,7 +1001,7 @@ TEST(rclcpp_cascade_lifecycle, activations_managing_late_joining_with_namespace)
     "node_B",
     "test_ns");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
 
@@ -1069,7 +1069,7 @@ TEST(rclcpp_cascade_lifecycle, activations_chained_with_namespace)
     "node_B",
     "test_ns");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
 
@@ -1176,7 +1176,7 @@ TEST(rclcpp_cascade_lifecycle, multiple_activations_chained_with_namespace)
     "node_C",
     "test_ns");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
   executor.add_node(node_c->get_node_base_interface());
@@ -1362,7 +1362,7 @@ TEST(rclcpp_cascade_lifecycle, fast_change_with_namespace)
     "node_B",
     "test_ns");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
 
@@ -1408,7 +1408,7 @@ TEST(rclcpp_cascade_lifecycle, activators_disappearance_with_namespace)
     "node_B",
     "test_ns");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
 
@@ -1474,7 +1474,7 @@ TEST(rclcpp_cascade_lifecycle, activators_disappearance_inter_with_namespace)
     "node_C",
     "test_ns");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_a->get_node_base_interface());
   executor.add_node(node_b->get_node_base_interface());
   executor.add_node(node_c->get_node_base_interface());
@@ -1830,7 +1830,7 @@ TEST(rclcpp_cascade_lifecycle, inheritance_with_namespace)
     "node_2",
     "test_ns");
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::experimental::executors::EventsExecutor executor;
   executor.add_node(node_1->get_node_base_interface());
   executor.add_node(node_2->get_node_base_interface());
 
