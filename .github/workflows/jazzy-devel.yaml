@@ -1,4 +1,4 @@
- name: jazzy-devel
+name: jazzy-devel
 
 on:
   pull_request:
